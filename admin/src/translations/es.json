@@ -1,0 +1,4 @@
+{
+  "generate-ai-audio.ai-audio-generator.label": "Generador de Audio AI",
+  "generate-ai-audio.ai-audio-generator.description": "Generar narración de audio del contenido usando OpenAI TTS"
+}

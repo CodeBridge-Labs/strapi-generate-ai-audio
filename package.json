@@ -1,0 +1,40 @@
+{
+  "name": "generate-ai-audio",
+  "version": "1.0.0",
+  "description": "Generate audio narration from content using ElevenLabs TTS",
+  "strapi": {
+    "name": "generate-ai-audio",
+    "displayName": "Generate AI Audio Narration",
+    "description": "Generate audio narration from blog and devotional content using ElevenLabs TTS",
+    "kind": "plugin"
+  },
+  "dependencies": {
+    "html-to-text": "^9.0.5"
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "4.13.6"
+  },
+  "author": {
+    "name": "Emanuel Sosa",
+    "email": "emanuelesausosa@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "Codebridge labs"
+    }
+  ],
+  "engines": {
+    "node": ">=16.0.0 <=20.x.x",
+    "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "develop": "tsc -p tsconfig.server.json -w",
+    "build": "tsc -p tsconfig.server.json",
+    "prepare": "npm run build"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeBridge-Labs/strapi-generate-ai-audio.git"
+  }
+}
