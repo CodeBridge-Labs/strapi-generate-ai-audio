@@ -28,9 +28,69 @@ const htmlToPlainText = (html: string): string => {
   });
 };
 
+const numberToSpanishWord = (n: number): string => {
+  const ones = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+  const teens = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+  const tens = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+  const hundreds = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+  if (n < 1 || n > 199) return n.toString();
+  
+  if (n < 10) return ones[n];
+  if (n < 20) return teens[n - 10];
+  if (n === 20) return 'veinte';
+  if (n < 30) return 'veinti' + ones[n - 20];
+  if (n === 100) return 'cien';
+  if (n < 100) {
+    const ten = Math.floor(n / 10);
+    const one = n % 10;
+    return tens[ten] + (one > 0 ? ' y ' + ones[one] : '');
+  }
+  
+  const hundred = Math.floor(n / 100);
+  const remainder = n % 100;
+  let result = hundreds[hundred];
+  
+  if (remainder > 0) {
+    result += ' ' + numberToSpanishWord(remainder);
+  }
+  
+  return result;
+};
+
+const formatRomanNumeral = (title: string): string => {
+  const romanToOrdinal: { [key: string]: string } = {
+    'I': 'Primera Parte',
+    'II': 'Segunda Parte',
+    'III': 'Tercera Parte',
+    'IV': 'Cuarta Parte',
+    'V': 'Quinta Parte',
+    'VI': 'Sexta Parte',
+    'VII': 'Séptima Parte',
+    'VIII': 'Octava Parte',
+    'IX': 'Novena Parte',
+    'X': 'Décima Parte',
+  };
+  
+  return title.replace(/\b(X|IX|VIII|VII|VI|V|IV|III|II|I)\s*$/i, (match, roman) => {
+    const upperRoman = roman.toUpperCase();
+    return romanToOrdinal[upperRoman] || match;
+  });
+};
+
 const formatBibleVerse = (text: string): string => {
   return text
-    .replace(/(\d+):(\d+)/g, '$1, versículo $2')
+    .replace(/(\d+)\s*:\s*(\d+)\s*-\s*(\d+)/g, (match, chapter, verseStart, verseEnd) => {
+      const chapterWord = numberToSpanishWord(parseInt(chapter));
+      const verseStartWord = numberToSpanishWord(parseInt(verseStart));
+      const verseEndWord = numberToSpanishWord(parseInt(verseEnd));
+      return `${chapterWord}, versículo ${verseStartWord} al ${verseEndWord}`;
+    })
+    .replace(/(\d+)\s*:\s*(\d+)/g, (match, chapter, verse) => {
+      const chapterWord = numberToSpanishWord(parseInt(chapter));
+      const verseWord = numberToSpanishWord(parseInt(verse));
+      return `${chapterWord}, versículo ${verseWord}`;
+    })
     .replace(/\bNTV\b/g, 'Nueva Traducción Viviente')
     .replace(/\bRVR\b/g, 'Reina Valera Revisada')
     .replace(/\bNVI\b/g, 'Nueva Versión Internacional');
@@ -38,11 +98,12 @@ const formatBibleVerse = (text: string): string => {
 
 const buildTextForBlog = (title: string, content: string): string => {
   const cleanTitle = htmlToPlainText(title || '');
+  const formattedTitle = formatRomanNumeral(cleanTitle);
   const cleanContent = htmlToPlainText(content || '');
   
   let text = '';
-  if (cleanTitle) {
-    text += cleanTitle + '.\n\n';
+  if (formattedTitle) {
+    text += formattedTitle + '.\n\n';
   }
   if (cleanContent) {
     text += cleanContent;
@@ -60,6 +121,7 @@ const buildTextForDevotional = (
   publishedAt?: string | Date | null
 ): string => {
   const cleanTitle = htmlToPlainText(title || '');
+  const formattedTitle = formatRomanNumeral(cleanTitle);
   const cleanVerse = htmlToPlainText(bibleVerse || '');
   const cleanContent = htmlToPlainText(content || '');
   const cleanPrayer = htmlToPlainText(prayer || '');
@@ -73,7 +135,7 @@ const buildTextForDevotional = (
   });
   const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
-  let text = `${capitalizedDate}: ${cleanTitle}.\n\n`;
+  let text = `${capitalizedDate}: ${formattedTitle}.\n\n`;
   
   if (cleanVerse) {
     text += formatBibleVerse(cleanVerse) + '\n\n';

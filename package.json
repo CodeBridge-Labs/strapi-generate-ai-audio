@@ -11,6 +11,12 @@
   "dependencies": {
     "html-to-text": "^9.0.5"
   },
+  "files": [
+    "dist",
+    "admin",
+    "strapi-server.js",
+    "strapi-admin.js"
+  ],
   "peerDependencies": {
     "@strapi/strapi": "4.13.6"
   },
