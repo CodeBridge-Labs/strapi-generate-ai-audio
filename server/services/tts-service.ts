@@ -117,8 +117,7 @@ const buildTextForDevotional = (
   bibleVerse: string,
   content: string,
   prayer: string,
-  action: string,
-  publishedAt?: string | Date | null
+  action: string
 ): string => {
   const cleanTitle = htmlToPlainText(title || '');
   const formattedTitle = formatRomanNumeral(cleanTitle);
@@ -126,16 +125,8 @@ const buildTextForDevotional = (
   const cleanContent = htmlToPlainText(content || '');
   const cleanPrayer = htmlToPlainText(prayer || '');
   const cleanAction = htmlToPlainText(action || '');
-  
-  const dateToUse = publishedAt ? new Date(publishedAt) : new Date();
-  const dateStr = dateToUse.toLocaleDateString('es-ES', { 
-    weekday: 'long', 
-    day: 'numeric', 
-    month: 'long' 
-  });
-  const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
-  let text = `${capitalizedDate}: ${formattedTitle}.\n\n`;
+  let text = `${formattedTitle}.\n\n`;
   
   if (cleanVerse) {
     text += formatBibleVerse(cleanVerse) + '\n\n';
@@ -232,14 +223,12 @@ const service = ({ strapi }: { strapi: Strapi }) => ({
         text = buildTextForBlog(entity.title || '', entity.content || '');
         characterCount = text.length;
       } else if (contentType === 'api::devotional.devotional') {
-        const publishedAt = entity.publishedAt ?? (entity as any).published_at ?? null;
         text = buildTextForDevotional(
           entity.title || '',
           entity.bible_verse || '',
           entity.content || '',
           entity.prayer || '',
-          entity.action || '',
-          publishedAt
+          entity.action || ''
         );
         characterCount = text.length;
       } else {

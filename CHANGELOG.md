@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-04-25
+
+### Fixed
+
+- Devotional narration no longer prepends the date (e.g. "Viernes, 17 de marzo:") to the audio. When audio was regenerated after the content's original publish date, the narrated date was stale and did not match the upcoming publish date, producing confusing audios. The narration now starts directly with the title, making the audio reusable regardless of when the devotional is published.
+
+### Changed
+
+- `buildTextForDevotional` in `tts-service.ts` no longer accepts `publishedAt`; callers no longer read or forward `publishedAt` from the entity.
+
 ## [1.0.0] - 2026-03-16
 
 ### Added

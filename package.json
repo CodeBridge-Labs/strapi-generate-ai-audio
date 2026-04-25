@@ -1,6 +1,6 @@
 {
   "name": "generate-ai-audio",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generate audio narration from content using ElevenLabs TTS",
   "strapi": {
     "name": "generate-ai-audio",
